@@ -1,6 +1,8 @@
 package module8;
 
-public class Shape {
+public abstract class Shape implements Namable{
 
 
+    @Override
+    public abstract void name();
 }
