@@ -21,6 +21,25 @@ public class MyArrayList <T>{
 
     }
 
+    public void remove(int index) {
+        Objects.checkIndex(index, arr.length);
+
+        int size = arr.length;
+        size--;
+        Object[] secondArr = new Object[size];
+
+        int j = 0;
+        for(int i = 0; i<size; i++) {
+
+            if(i==index){
+                j++;
+            }
+            secondArr[i] = arr[j];
+            j++;
+        }
+        arr = secondArr;
+    }
+
     public void clear() {
         arr = new Object[0];
     }

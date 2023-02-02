@@ -15,9 +15,14 @@ public class Test {
 
         System.out.println(cars);
         System.out.println(cars.size());
+        System.out.println(cars.get(1));
 
-        cars.clear();
-        System.out.println(cars.get(3));
+        cars.remove(2);
+        System.out.println(cars);
+        System.out.println(cars.size());
+
+        //cars.clear();
+        //System.out.println(cars.get(3));
 
     }
 }
