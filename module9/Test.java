@@ -81,5 +81,26 @@ public class Test {
         System.out.println("cars3.pop() = " + cars3.pop());
         System.out.println("cars3.peek() = " + cars3.peek());
 
+        /*
+        Test method MyHashMap
+         */
+        System.out.println("-----Test MyHashMap:-----");
+        MyHashMap<String, Integer> prices = new MyHashMap<>();
+        prices.put("Dodge", 15000);
+        prices.put("Mercedes", 100000);
+        prices.put("BMW", 120000);
+
+        System.out.println("prices: " + prices);
+        System.out.println("prices.size() = " + prices.size());
+
+        prices.remove("BMW");
+        System.out.println("prices = " + prices);
+
+
+        prices.put("Toyota", 50000);
+        System.out.println("prices = " + prices);
+
+        prices.clear();
+        System.out.println("prices = " + prices);
     }
 }
