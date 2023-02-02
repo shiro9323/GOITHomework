@@ -6,6 +6,7 @@ public class Test {
         /*
         Test method MyArrayList
          */
+
         System.out.println("-----Test MyArrayList:-----");
 
         MyArrayList<String> cars = new MyArrayList<>();
@@ -63,7 +64,22 @@ public class Test {
         System.out.println("cars2.peek() = " + cars2.peek());
         System.out.println("cars2.peek() = " + cars2.peek());
 
+        /*
+        Test method MyStack
+         */
+        System.out.println("-----Test MyStack:-----");
+        MyStack<String> cars3 = new MyStack<>();
 
+        cars3.push("Dodge");
+        cars3.push("Mercedes");
+        cars3.push("BMW");
+
+        System.out.println(cars3);
+        System.out.println("cars3.peek() = " + cars3.peek());
+        System.out.println("cars3.peek() = " + cars3.peek());
+        System.out.println("cars3.pop() = " + cars3.pop());
+        System.out.println("cars3.pop() = " + cars3.pop());
+        System.out.println("cars3.peek() = " + cars3.peek());
 
     }
 }
