@@ -47,6 +47,23 @@ public class Test {
         System.out.println(names);
         System.out.println(names.size());
 
+        /*
+        Test method MyQueue
+         */
+        System.out.println("-----Test MyQueue:-----");
+        MyQueue<String> cars2 = new MyQueue<>();
+
+        cars2.add("Dodge");
+        cars2.add("Mercedes");
+        cars2.add("BMW");
+
+        System.out.println(cars2);
+        System.out.println("cars2.poll() = " + cars2.pool());
+        System.out.println("cars2.poll() = " + cars2.pool());
+        System.out.println("cars2.peek() = " + cars2.peek());
+        System.out.println("cars2.peek() = " + cars2.peek());
+
+
 
     }
 }
