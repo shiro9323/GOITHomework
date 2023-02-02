@@ -5,9 +5,7 @@ import java.util.Objects;
 
 public class MyArrayList <T>{
 
-    private Object[] arr = new Object[0];
-
-    //private int index;
+    protected Object[] arr = new Object[0];
 
     public void add(T value){
 
