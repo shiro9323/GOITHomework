@@ -87,18 +87,23 @@ public class Test {
         System.out.println("-----Test MyHashMap:-----");
         MyHashMap<String, Integer> prices = new MyHashMap<>();
         prices.put("Dodge", 15000);
+        prices.put("Dodge", 17000);
         prices.put("Mercedes", 100000);
         prices.put("BMW", 120000);
+
+        System.out.println("prices.get(\"BMW\") = " + prices.get("BMW"));
 
         System.out.println("prices: " + prices);
         System.out.println("prices.size() = " + prices.size());
 
         prices.remove("BMW");
         System.out.println("prices = " + prices);
+        System.out.println("prices.size() = " + prices.size());
 
 
         prices.put("Toyota", 50000);
         System.out.println("prices = " + prices);
+        System.out.println("prices.size() = " + prices.size());
 
         prices.clear();
         System.out.println("prices = " + prices);

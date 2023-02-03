@@ -1,54 +1,23 @@
 package module9;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 public class MyHashMap<K, V> {
 
     private int size;
     private Node<K, V> firstNode;
-    private Node<K, V> lastNode;
+
+    Node<K,V>[] table = new Node[10];
 
     private void setNullFirstLastNodes(){
         firstNode = null;
-        lastNode = null;
         size = 0;
     }
 
-    private Node<K, V> getNodeByKey(K key){
-        Node<K, V> node = firstNode;
-        while (node!=null){
-            if(node.key.equals(key)){
-                return node;
-            }
-            node = node.next;
-        }
-        return node;
-    }
-
-    private Node<K, V> getNodeByNext(Node<K, V> searchNode){
-        if (searchNode==null){
-            return null;
-        }
-        Node<K, V> node = firstNode;
-        while (node!=null){
-
-            if (node.next==null){
-                return null;
-            }
-
-            if(node.next.equals(searchNode)){
-                return node;
-            }
-            node = node.next;
-        }
-        return node;
-    }
-
-
-
     public void put(K key, V value) {
-        if (get(key) == null) {
-            int hash = key.hashCode();
-            Node<K, V> node = new Node<>(hash, key, value);
+        /*if (get(key) == null) {
+            int hash = hash(key);
+            Node<K, V> node = new Node<>(hash, key, value, null);
 
             if (size == 0) {
                 firstNode = node;
@@ -58,11 +27,36 @@ public class MyHashMap<K, V> {
             lastNode = node;
 
             size++;
+        }*/
+        int hash = hash(key);
+        Node<K, V>[] tab = table;
+        int n = table.length;
+        int i = (n - 1) & hash;
+        Node<K, V> node, e;
+        node = tab[i];
+        if (tab[i] == null) {
+            tab[i] = new Node<>(hash, key, value, null);
+            size++;
+        } else {
+            for (int count = 0; ; ++count) {
+                if (node.hash == hash && Objects.equals(node.key, key)) {
+                    node.value = value;
+                    break;
+                }
+                if ((e = node.next) == null) {
+                    node.next = new Node<>(hash, key, value, null);
+                    size++;
+                    break;
+                }
+                node = e;
+            }
+
+
         }
     }
 
     public void remove(K key) {
-        if (size == 0){
+        /*if (size == 0){
             return;
         }
 
@@ -87,7 +81,31 @@ public class MyHashMap<K, V> {
             prevNode.next = findNode.next;
         }
 
-        size--;
+        size--;*/
+        int hash=hash(key);
+
+        if(table[hash] == null){
+            return;
+        }
+
+        Node<K,V> previous = null;
+        Node<K,V> current = table[hash];
+
+        while(current != null){
+            if(current.key.equals(key)){
+                if(previous==null){
+                    table[hash]=table[hash].next;
+                    return;
+                }
+                    else{
+                        previous.next=current.next;
+                        return;
+                    }
+            }
+            previous = current;
+            current = current.next;
+            size--;
+        }
     }
 
     public void clear() {
@@ -112,12 +130,29 @@ public class MyHashMap<K, V> {
     }
 
     public V get(K key) {
-        Node<K, V> node = getNodeByKey(key);
+        /*Node<K, V> node = getNodeByKey(key);
         if (node == null) {
             return null;
         }
-        return node.value;
+        return node.value;*/
 
+        int hash = hash(key);
+        if(table[hash] == null){
+            return null;
+        }else{
+            Node<K,V> temp = table[hash];
+            while(temp!= null){
+                if(temp.key.equals(key))
+                    return temp.value;
+                temp = temp.next;
+            }
+            return null;
+        }
+
+    }
+
+    private int hash(K key){
+        return Math.abs(key.hashCode()) % 10;
     }
 
 
@@ -128,12 +163,16 @@ public class MyHashMap<K, V> {
         }
 
         StringJoiner res = new StringJoiner(",");
-        res.add(firstNode.toString());
 
-        Node<K, V> node = firstNode.next;
-        while (node != null) {
-            res.add(node.toString());
-            node = node.next;
+        for (Node<K, V> str : table) {
+            if (str != null) {
+                Node<K, V> current = str;
+                res.add(current.toString());
+                while (current.next != null) {
+                    res.add(current.next.toString());
+                    current = current.next;
+                }
+            }
         }
         return "{" + res + "}";
     }
@@ -145,15 +184,10 @@ public class MyHashMap<K, V> {
         V value;
         Node<K, V> next;
 
-        Node(int hash, K key, V value) {
+        Node(int hash, K key, V value, Node<K, V> next) {
             this.hash = hash;
             this.key = key;
             this.value = value;
-        }
-
-
-        Node(K element) {
-            this.key = element;
         }
 
         @Override
