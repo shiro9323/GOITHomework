@@ -35,7 +35,7 @@ public class WordFrequency {
         Comparator<String> comparator = new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
-                return wordFrequency.get(o2).compareTo(wordFrequency.get(o1));
+                return wordFrequency.get(o2).compareTo(wordFrequency.get(o1)) > 0 ? 1: -1;
             }
         };
 
