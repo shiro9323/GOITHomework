@@ -45,8 +45,8 @@ public class StreamApiTest {
      public static String convertedToStringOddNames(List<String> names){
 
         return names.stream()
-                .filter(name-> names.indexOf(name)%2==0)
-                .map(name-> names.indexOf(name) + 1 +". "+name)
+                .filter(name-> names.indexOf(name)%2!=0)
+                .map(name-> names.indexOf(name)  +". "+name)
                 .collect(Collectors.joining(", "));
 
      }
