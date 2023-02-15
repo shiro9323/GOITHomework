@@ -1,8 +1,6 @@
 package module11;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
@@ -37,6 +35,10 @@ public class StreamApiTest {
         System.out.println("streamLong = " + streamLong);
 
 
+        Stream<Integer> stream1 = Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
+        Stream<Integer> stream2 = Stream.of(15, 14, 13, 12, 11, 10);
+        Stream<Integer> zip = zip(stream1, stream2);
+        System.out.println(zip.collect(Collectors.toList()));
     }
 
      //Task 1
@@ -79,6 +81,20 @@ public class StreamApiTest {
 
         return LongStream.iterate(1, x -> (a * x + c) % m).boxed();
 
+
+     }
+
+     //Task 5
+     public static <T> Stream<T> zip(Stream<T> first, Stream<T> second) {
+
+         List<T> res = new ArrayList<>();
+         Iterator<T> iterator1 = first.iterator();
+         Iterator<T> iterator2 = second.iterator();
+         while (iterator1.hasNext() && iterator2.hasNext()) {
+             res.add(iterator1.next());
+             res.add(iterator2.next());
+         }
+         return res.stream();
 
      }
 }
