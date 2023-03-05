@@ -1,18 +1,21 @@
 package module13;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class HttpService {
 
@@ -113,6 +116,89 @@ public class HttpService {
             userList.addAll(new Gson().fromJson(httpResponse.body(), TypeToken.getParameterized(List.class, User.class).getType()));
         }
         return userList;
+    }
+
+    public static List<Comment> getCommentsOfUsersLastPost(int userId) throws IOException, InterruptedException, URISyntaxException {
+        Optional<Post> lastPostByUser = getLastPostByUser(userId);
+        if (lastPostByUser.isPresent()) {
+            return getCommentsByPost(userId, lastPostByUser.get().getId());
+        }
+        return Collections.emptyList();
+    }
+
+    private static Optional<Post> getLastPostByUser(int userId) throws IOException, InterruptedException, URISyntaxException {
+        String formattedLink = MessageFormat
+                .format("https://jsonplaceholder.typicode.com/users/{0}/posts", userId);
+        URI uri = new URI(formattedLink);
+        HttpRequest httpRequest = HttpRequest.newBuilder(uri)
+                .GET()
+                .build();
+
+        HttpClient httpClient = HttpClient.newBuilder().build();
+
+        HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        List<Post> postsList = new ArrayList<>();
+        if (httpResponse.statusCode() == 200){
+            Type type = TypeToken.getParameterized(List.class, Post.class).getType();
+            postsList.addAll(new Gson().fromJson(httpResponse.body(), type));
+            return postsList.stream()
+                    .max(Comparator.comparingInt(Post::getId));
+        }
+        return Optional.empty();
+    }
+
+    private static List<Comment> getCommentsByPost(int userId, int postId) throws IOException, InterruptedException, URISyntaxException {
+        String formattedLink = MessageFormat
+                .format("https://jsonplaceholder.typicode.com/posts/{0}/comments", postId);
+        URI uri = new URI(formattedLink);
+        HttpRequest httpRequest = HttpRequest.newBuilder(uri)
+                .GET()
+                .build();
+
+        HttpClient httpClient = HttpClient.newBuilder().build();
+
+        HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        List<Comment> commentsList = new ArrayList<>();
+        if (httpResponse.statusCode() == 200) {
+
+            commentsList.addAll(new Gson().fromJson(httpResponse.body(), TypeToken.getParameterized(List.class, Comment.class).getType()));
+
+            convertToJsonFile(userId, postId, commentsList);
+        }
+        return commentsList;
+    }
+
+    private static void convertToJsonFile(int userId, int postId, List<Comment> commentList) {
+        String jsonFile = MessageFormat.format("module13/user-{0}-post-{1}-comments.json",
+                userId, postId);
+        try (Writer fileWriter = new FileWriter(jsonFile)) {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            gson.toJson(commentList, fileWriter);
+            System.out.println("Save file: " + jsonFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static List<Todo> getUncompletedTasks(int userId) throws URISyntaxException, IOException, InterruptedException {
+        String formattedLink = MessageFormat
+                .format("https://jsonplaceholder.typicode.com/users/{0}/todos", userId);
+        URI uri = new URI(formattedLink);
+        HttpRequest httpRequest = HttpRequest.newBuilder(uri)
+                .GET()
+                .build();
+
+        HttpClient httpClient = HttpClient.newBuilder().build();
+
+        HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        List<Todo> todosList = new ArrayList<>();
+        if (httpResponse.statusCode() == 200){
+            Type type = TypeToken.getParameterized(List.class, Todo.class).getType();
+            todosList.addAll(new Gson().fromJson(httpResponse.body(), type));
+        }
+        return todosList.stream()
+                .filter(task -> !task.isCompleted())
+                .collect(Collectors.toList());
     }
 
 }

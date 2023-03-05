@@ -42,7 +42,11 @@ public class HttpServiceTest {
         //GET by username
         System.out.println("HttpService.getUserByUsername(\"Delphine\") = " + HttpService.getUserByUsername("Delphine"));
 
-        //Task2
+        //Task2 Comment
+        System.out.println("HttpService.getCommentsOfUsersLastPost(10) = " + HttpService.getCommentsOfUsersLastPost(10));
+
+        //Task3 todo
+        System.out.println("HttpService.getUncompletedTasks(10) = " + HttpService.getUncompletedTasks(10));
 
 
     }
